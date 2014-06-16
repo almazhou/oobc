@@ -37,20 +37,7 @@ public class Rover {
     }
 
     public void turnLeft() {
-        switch (facing) {
-            case North:
-                facing = Facing.West;
-                break;
-            case South:
-                facing = Facing.East;
-                break;
-            case West:
-                facing = Facing.South;
-                break;
-            case East:
-                facing = Facing.North;
-                break;
-        }
+        facing = facing.left();
     }
 
     public Facing getFacing() {
@@ -67,24 +54,45 @@ public class Rover {
             public Facing right() {
                 return West;
             }
+
+            @Override
+            public Facing left() {
+                return East;
+            }
         }, East {
             @Override
             public Facing right() {
                 return South;
+            }
+
+            @Override
+            public Facing left() {
+                return North;
             }
         }, West {
             @Override
             public Facing right() {
                 return North;
             }
+
+            @Override
+            public Facing left() {
+                return South;
+            }
         }, North {
             @Override
             public Facing right() {
                 return East;
             }
+
+            @Override
+            public Facing left() {
+                return West;
+            }
         };
 
         public abstract Facing right();
+        public abstract Facing left();
 
         }
 }
