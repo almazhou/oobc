@@ -1,39 +1,24 @@
 package com.thoughtworks.oobc.marsrover;
 
 public class Rover {
-    private int x;
-    private int y;
+    private Positions positions;
     private Facing facing;
 
     public Rover(int x, int y, Facing facing) {
-        this.x = x;
-        this.y = y;
+        this.positions = new Positions(x, y);
         this.facing = facing;
     }
 
     public void move() {
-        switch (facing) {
-            case North:
-                y += 1;
-                break;
-            case South:
-                y -= 1;
-                break;
-            case West:
-                x -= 1;
-                break;
-            case East:
-                x += 1;
-                break;
-        }
+        this.positions = facing.move(positions);
     }
 
     public int getY() {
-        return y;
+        return positions.y;
     }
 
     public int getX() {
-        return x;
+        return positions.x;
     }
 
     public void turnLeft() {
@@ -59,6 +44,12 @@ public class Rover {
             public Facing left() {
                 return East;
             }
+
+            @Override
+            public Positions move(Positions positions) {
+                positions.y -= 1;
+                return positions;
+            }
         }, East {
             @Override
             public Facing right() {
@@ -68,6 +59,12 @@ public class Rover {
             @Override
             public Facing left() {
                 return North;
+            }
+
+            @Override
+            public Positions move(Positions positions) {
+                positions.x += 1;
+                return positions;
             }
         }, West {
             @Override
@@ -79,6 +76,12 @@ public class Rover {
             public Facing left() {
                 return South;
             }
+
+            @Override
+            public Positions move(Positions positions) {
+                positions.x -= 1;
+                return positions;
+            }
         }, North {
             @Override
             public Facing right() {
@@ -89,10 +92,19 @@ public class Rover {
             public Facing left() {
                 return West;
             }
+
+            @Override
+            public Positions move(Positions positions) {
+                positions.y += 1;
+                return positions;
+            }
         };
 
         public abstract Facing right();
+
         public abstract Facing left();
 
-        }
+        public abstract Positions move(Positions positions);
+
+    }
 }
