@@ -15,18 +15,30 @@ public class ShoppingCart {
 
 
     public double getSalesTax() {
+        return roundToNearest5Percent(getTotalSalesTax());
+    }
+
+    public double roundToNearest5Percent(double total) {
+        return Math.round(total * 100 / 5) * 5 / 100.00;
+    }
+
+    public double getTotalSalesTax() {
         double total = 0.0;
         for (Product product : products) {
             total += calculator.calculate(product);
         }
-        return Math.round(total * 100 / 5) * 5 / 100.00;
+        return total;
     }
 
     public double getTotal() {
+        return getTotalPrice() + getSalesTax();
+    }
+
+    private double getTotalPrice() {
         double total = 0.0;
         for (Product product : products)
             total += product.getPrice();
-        return total + getSalesTax();
+        return total;
     }
 
     public void printTo(OutputStream output) throws IOException {
