@@ -29,6 +29,10 @@ public class Product {
         return description;
     }
 
+    public boolean isImported() {
+        return getSource() == Source.Imported;
+    }
+
     public enum Category {Etc, Food}
 
     public enum Source {Imported, Domestic}

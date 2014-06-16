@@ -14,8 +14,13 @@ public class TaxCalculator {
 
     public double calculate(Product product) {
         double tax = BASIC_TAX;
-        if (exempt.contains(product.getCategory())) tax = 0.0;
-        if (product.getSource() == Product.Source.Imported) tax += DUTY;
+        if (isExempt(product)) tax = 0.0;
+        if (product.isImported()) tax += DUTY;
         return product.getPrice() * tax;
     }
+
+    private boolean isExempt(Product product) {
+        return exempt.contains(product.getCategory());
+    }
+
 }
