@@ -42,12 +42,39 @@ public class ShoppingCart {
     }
 
     public void printTo(OutputStream output) throws IOException {
+        StringBuffer printInfo = preparePrintInfo();
+        printGivenInfo(output, printInfo);
+    }
+
+    private StringBuffer preparePrintInfo() {
+        StringBuffer printInfo = new StringBuffer();
+        printInfo.append(getItemInfor()).append(getSalesTaxesInfo()).append(getTotalPrintInfo());
+        return printInfo;
+    }
+
+    private void printGivenInfo(OutputStream output, StringBuffer printInfo) throws IOException {
         OutputStreamWriter out = new OutputStreamWriter(output);
-        for (Product product : products)
-            out.append("1 ").append(product.getDescription())
-                    .append(": ").append(String.valueOf(product.getPrice())).append("\n");
-        out.append("Sales Taxes: ").append(String.valueOf(getSalesTax())).append("\n");
-        out.append("Total: ").append(String.valueOf(getTotal())).append("\n");
+        out.append(printInfo);
         out.flush();
+    }
+
+    private StringBuffer getTotalPrintInfo() {
+        StringBuffer total = new StringBuffer();
+        total.append("Total: ").append(String.valueOf(getTotal())).append("\n");
+        return total;
+    }
+
+    private StringBuffer getSalesTaxesInfo() {
+        StringBuffer salesTaxes = new StringBuffer();
+        salesTaxes.append("Sales Taxes: ").append(String.valueOf(getSalesTax())).append("\n");
+        return salesTaxes;
+    }
+
+    private StringBuffer getItemInfor() {
+        StringBuffer stringBuffer = new StringBuffer();
+        for (Product product : products)
+            stringBuffer.append("1 ").append(product.getDescription())
+                    .append(": ").append(String.valueOf(product.getPrice())).append("\n");
+        return stringBuffer;
     }
 }
