@@ -25,7 +25,7 @@ public class ShoppingCart {
     public double getTotalSalesTax() {
         double total = 0.0;
         for (Product product : products) {
-            total += calculator.calculate(product);
+            total += calculator.calculateTax(product);
         }
         return total;
     }

@@ -12,19 +12,19 @@ public class TaxCalculator {
         this.exempt = Arrays.asList(exempt);
     }
 
-    public double calculate(Product product) {
-        return product.getPrice() * getTotalTax(product);
+    public double calculateTax(Product product) {
+        return product.getPrice() * getTotalTaxRate(product);
     }
 
-    private double getTotalTax(Product product) {
-        return getBasicTax(product) + getDuty(product);
+    private double getTotalTaxRate(Product product) {
+        return getBasicTaxRate(product) + getDutyRate(product);
     }
 
-    private double getDuty(Product product) {
-        double duty = product.isImported() ? DUTY : 0;
+    private double getDutyRate(Product product) {
+        return product.isImported() ? DUTY : 0;
     }
 
-    private double getBasicTax(Product product) {
+    private double getBasicTaxRate(Product product) {
         return isExempt(product) ? 0 : BASIC_TAX;
     }
 
