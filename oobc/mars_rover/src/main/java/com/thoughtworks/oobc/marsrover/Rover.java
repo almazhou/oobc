@@ -4,8 +4,8 @@ public class Rover {
     private Positions positions;
     private Facing facing;
 
-    public Rover(int x, int y, Facing facing) {
-        this.positions = new Positions(x, y);
+    public Rover(Positions positions, Facing facing) {
+        this.positions = positions;
         this.facing = facing;
     }
 
