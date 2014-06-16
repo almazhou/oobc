@@ -25,6 +25,10 @@ public class Product {
         return source;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     public enum Category {Etc, Food}
 
     public enum Source {Imported, Domestic}

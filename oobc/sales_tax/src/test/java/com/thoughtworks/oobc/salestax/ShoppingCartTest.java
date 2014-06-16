@@ -2,7 +2,12 @@ package com.thoughtworks.oobc.salestax;
 
 import org.junit.Test;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 public class ShoppingCartTest {
     @Test
@@ -55,5 +60,21 @@ public class ShoppingCartTest {
                 new Product(Product.Source.Domestic, Product.Category.Etc, "music CD", 0.5));
 
         assertEquals(1.1, cart.getTotal(), 0.0001);
+    }
+
+    @Test
+    public void should_print_out_shopping_cart() throws IOException {
+        TaxCalculator calculator = new TaxCalculator(Product.Category.Food);
+
+        ShoppingCart cart = new ShoppingCart(calculator,
+                new Product(Product.Source.Domestic, Product.Category.Etc, "music CD", 0.5),
+                new Product(Product.Source.Domestic, Product.Category.Etc, "music CD", 0.5));
+
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+
+
+        cart.printTo(output);
+
+        assertThat(new String(output.toByteArray()), is("1 music CD: 0.5\n1 music CD: 0.5\nSales Taxes: 0.1\nTotal: 1.1\n"));
     }
 }
