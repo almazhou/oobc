@@ -58,21 +58,33 @@ public class Rover {
     }
 
     public void turnRight() {
-        switch (facing) {
-            case North:
-                facing = Facing.East;
-                break;
-            case South:
-                facing = Facing.West;
-                break;
-            case West:
-                facing = Facing.North;
-                break;
-            case East:
-                facing = Facing.South;
-                break;
-        }
+        facing = facing.right();
     }
 
-    public enum Facing {South, East, West, North}
+    public enum Facing {
+        South {
+            @Override
+            public Facing right() {
+                return West;
+            }
+        }, East {
+            @Override
+            public Facing right() {
+                return South;
+            }
+        }, West {
+            @Override
+            public Facing right() {
+                return North;
+            }
+        }, North {
+            @Override
+            public Facing right() {
+                return East;
+            }
+        };
+
+        public abstract Facing right();
+
+        }
 }
