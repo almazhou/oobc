@@ -13,10 +13,19 @@ public class TaxCalculator {
     }
 
     public double calculate(Product product) {
-        double tax = BASIC_TAX;
-        if (isExempt(product)) tax = 0.0;
-        if (product.isImported()) tax += DUTY;
-        return product.getPrice() * tax;
+        return product.getPrice() * getTotalTax(product);
+    }
+
+    private double getTotalTax(Product product) {
+        return getBasicTax(product) + getDuty(product);
+    }
+
+    private double getDuty(Product product) {
+        double duty = product.isImported() ? DUTY : 0;
+    }
+
+    private double getBasicTax(Product product) {
+        return isExempt(product) ? 0 : BASIC_TAX;
     }
 
     private boolean isExempt(Product product) {
