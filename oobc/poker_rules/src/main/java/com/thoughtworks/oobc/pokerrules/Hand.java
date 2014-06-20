@@ -15,32 +15,80 @@ public class Hand implements Comparable<Hand> {
 
     public Rank getRank() {
 
-        Set<Card.Kind> kinds = cards.stream().map(Card::getKind).collect(Collectors.toSet());
+        Set<Card.Kind> kinds = getKinds();
 
-        Set<Integer> numbers = cards.stream().map(Card::getNumber).collect(Collectors.toSet());
+        Set<Integer> numbers = getNumbers();
 
-        Integer max = Collections.max(cards.stream().map(Card::getNumber).collect(Collectors.groupingBy(s -> s))
-                .values().stream().map(s -> s.size()).collect(Collectors.toList()));
+        Integer max = getMaxCardValue();
 
 
-        if (numbers.size() == 5) {
-            if (kinds.size() == 1) {
-                if (max(numbers) - min(numbers) == 4) return Rank.StraightFlush;
-                if (max(numbers) == 13 && min(numbers) == 1) return Rank.RoyalFlush;
+        if (hasNoRepeat(numbers)) {
+            if (isFlush(kinds)) {
+                if (isStraight(numbers)) return Rank.StraightFlush;
+                if (isRoyal(numbers)) return Rank.RoyalFlush;
                 return Rank.Flush;
             }
-            if (max(numbers) - min(numbers) == 4 || (max(numbers) == 13 && min(numbers) == 1)) return Rank.Straight;
+            if (isStraight(numbers) || (isRoyal(numbers))) return Rank.Straight;
             return Rank.HighCard;
         }
 
-        if (numbers.size() == 4 && max != 3) return Rank.OnePair;
-        if (numbers.size() == 3 && max != 3) return Rank.TwoPair;
-        if (numbers.size() == 2 && max != 3) return Rank.FourOfAKind;
+        if (isOnePair(numbers, max)) return Rank.OnePair;
+        if (isTwoPair(numbers, max)) return Rank.TwoPair;
+        if (isFourOfAKind(numbers, max)) return Rank.FourOfAKind;
 
-        if (numbers.size() == 3 && max == 3) return Rank.ThreeOfAKind;
-        if (numbers.size() == 2 && max == 3) return Rank.FullHouse;
+        if (isThreeOfAKind(numbers, max)) return Rank.ThreeOfAKind;
+        if (isFullHouse(numbers, max)) return Rank.FullHouse;
 
         return Rank.HighCard;
+    }
+
+    private boolean isFullHouse(Set<Integer> numbers, Integer max) {
+        return numbers.size() == 2 && max == 3;
+    }
+
+    private boolean isThreeOfAKind(Set<Integer> numbers, Integer max) {
+        return numbers.size() == 3 && max == 3;
+    }
+
+    private boolean isFourOfAKind(Set<Integer> numbers, Integer max) {
+        return numbers.size() == 2 && max != 3;
+    }
+
+    private boolean isTwoPair(Set<Integer> numbers, Integer max) {
+        return numbers.size() == 3 && max != 3;
+    }
+
+    private boolean isOnePair(Set<Integer> numbers, Integer max) {
+        return numbers.size() == 4 && max != 3;
+    }
+
+    private boolean isRoyal(Set<Integer> numbers) {
+        return max(numbers) == 13 && min(numbers) == 1;
+    }
+
+    private boolean isStraight(Set<Integer> numbers) {
+        return max(numbers) - min(numbers) == 4;
+    }
+
+    private boolean isFlush(Set<Card.Kind> kinds) {
+        return kinds.size() == 1;
+    }
+
+    private boolean hasNoRepeat(Set<Integer> numbers) {
+        return numbers.size() == 5;
+    }
+
+    private Integer getMaxCardValue() {
+        return Collections.max(cards.stream().map(Card::getNumber).collect(Collectors.groupingBy(s -> s))
+                .values().stream().map(s -> s.size()).collect(Collectors.toList()));
+    }
+
+    private Set<Integer> getNumbers() {
+        return cards.stream().map(Card::getNumber).collect(Collectors.toSet());
+    }
+
+    private Set<Card.Kind> getKinds() {
+        return cards.stream().map(Card::getKind).collect(Collectors.toSet());
     }
 
     @Override
