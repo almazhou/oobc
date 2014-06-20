@@ -35,15 +35,10 @@ public class Hand implements Comparable<Hand> {
         if (isOnePair(numbers, max)) return Rank.OnePair;
         if (isTwoPair(numbers, max)) return Rank.TwoPair;
         if (isFourOfAKind(numbers, max)) return Rank.FourOfAKind;
-
         if (isThreeOfAKind(numbers, max)) return Rank.ThreeOfAKind;
-        if (isFullHouse(numbers, max)) return Rank.FullHouse;
+        if (numbers.size() == 2 && max == 3) return Rank.FullHouse;
 
         return Rank.HighCard;
-    }
-
-    private boolean isFullHouse(Set<Integer> numbers, Integer max) {
-        return numbers.size() == 2 && max == 3;
     }
 
     private boolean isThreeOfAKind(Set<Integer> numbers, Integer max) {
@@ -96,10 +91,22 @@ public class Hand implements Comparable<Hand> {
         Rank rank = getRank();
         int rankCompare = rank.compareTo(o.getRank());
         if (rankCompare != 0) return rankCompare;
-        if (rank == Rank.Straight || rank == Rank.StraightFlush
-                || rank == Rank.Flush || rank == Rank.HighCard)
-            return getMaxCard().getNumber() - o.getMaxCard().getNumber();
+        if (isNonPair(rank))
+            return compairMaxCard(o);
 
+        return comparePairs(o);
+    }
+
+    private boolean isNonPair(Rank rank) {
+        return rank == Rank.Straight || rank == Rank.StraightFlush
+                || rank == Rank.Flush || rank == Rank.HighCard;
+    }
+
+    private int compairMaxCard(Hand o) {
+        return getMaxCard().getNumber() - o.getMaxCard().getNumber();
+    }
+
+    private int comparePairs(Hand o) {
         List<Integer> pairs = getPairs();
         List<Integer> otherPairs = o.getPairs();
         for (int i = 0; i < pairs.size(); i++)
